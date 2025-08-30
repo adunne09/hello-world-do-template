@@ -1,0 +1,49 @@
+{
+  "version": "1.0",
+  "accountId": null,
+  "zoneId": null,
+  "usageModel": "bundled",
+  "workers": [
+    {
+      "name": "hello-world-do-template",
+      "entry": "src/index.ts",
+      "compatibility_date": "2025-04-01",
+      "flags": {
+        "upload_source_maps": true
+      },
+      "routes": [],
+      "crons": [],
+      "migrations": [
+        {
+          "new_sqlite_classes": ["MyDurableObject"],
+          "tag": "v1"
+        }
+      ]
+    }
+  ],
+  "bindings": {
+    "kv": [],
+    "d1": [],
+    "r2": [],
+    "durable_objects": [
+      {
+        "binding": "MY_DURABLE_OBJECT",
+        "class_name": "MyDurableObject"
+      }
+    ],
+    "containers": [],
+    "queues": [],
+    "ai": [],
+    "hyperdrive": [],
+    "vectorize": [],
+    "service": [],
+    "environment_vars": []
+  },
+  "pages": [],
+  "functions": [],
+  "assets": [],
+  "observability": {
+    "enabled": true
+  },
+  "unsupported_features": []
+}

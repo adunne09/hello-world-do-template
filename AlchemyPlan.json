@@ -1,0 +1,52 @@
+{
+  "version": "0.64.0",
+  "imports": [
+    {
+      "module": "alchemy",
+      "items": ["alchemy", "type"]
+    },
+    {
+      "module": "alchemy/cloudflare",
+      "items": ["Worker", "DurableObjectNamespace", "KVNamespace", "R2Bucket", "Queue", "Workflow"]
+    }
+  ],
+  "patterns": {
+    "worker": {
+      "code_snippet": "export const worker = await Worker(\"worker\", {\n  name: `${app.name}-${app.stage}-worker`,\n  entrypoint: \"./src/worker.ts\",\n  bindings: {\n    MY_DURABLE_OBJECT: DurableObjectNamespace<MyDurableObject>(\"MY_DURABLE_OBJECT\", {\n      className: \"MyDurableObject\",\n      sqlite: true\n    })\n  },\n  compatibilityDate: \"2025-04-01\",\n  observability: {\n    enabled: true\n  },\n  adopt: true\n});",
+      "required_fields": ["name", "entrypoint"],
+      "optional_fields": ["compatibilityDate", "bindings", "observability", "adopt"]
+    },
+    "durable_objects": {
+      "code_snippet": "const doNamespace = DurableObjectNamespace<MyDurableObject>(\"MY_DURABLE_OBJECT\", {\n  className: \"MyDurableObject\",\n  sqlite: true\n});",
+      "required_fields": ["className"],
+      "optional_fields": ["sqlite", "scriptName", "environment", "namespaceId"]
+    },
+    "observability": {
+      "code_snippet": "observability: {\n  enabled: true\n}",
+      "required_fields": [],
+      "optional_fields": ["enabled"]
+    },
+    "migrations": {
+      "code_snippet": "// Migrations are handled automatically by Alchemy based on Durable Object class changes\n// The system tracks migrations with tags and handles:\n// - new_sqlite_classes: [\"MyDurableObject\"]\n// - deleted_classes, renamed_classes, transferred_classes\n// Migration tags are automatically managed: old_tag -> new_tag",
+      "required_fields": [],
+      "optional_fields": ["migrationTag"]
+    },
+    "app_initialization": {
+      "code_snippet": "const app = await alchemy(\"hello-world-do-template\");\n\n// Define resources and workers here\n\nawait app.finalize();",
+      "required_fields": ["app_name"],
+      "optional_fields": []
+    }
+  },
+  "unsupported": [
+    "routes - Alchemy uses `url: true` for workers.dev URLs instead of explicit routes configuration",
+    "crons - No direct cron scheduling pattern found, may need to use Cloudflare's native cron triggers"
+  ],
+  "migration_notes": [
+    "Alchemy automatically handles Durable Object migrations based on class name changes and sqlite flag",
+    "Migration tags are managed internally - the system tracks 'alchemy:migration-tag:' prefixed tags",
+    "Compatibility date defaults to latest but should be explicitly set for production",
+    "Use 'adopt: true' to adopt existing Cloudflare resources instead of creating new ones",
+    "Upload source maps is enabled by default with modern bundling",
+    "All workers get observability enabled by default unless explicitly disabled"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "kind": "cloudflare::Worker",
+  "id": "worker",
+  "fqn": "hello-world-do-template/dev/worker",
+  "seq": 0,
+  "status": "creating",
+  "data": {},
+  "output": {
+    "Symbol(alchemy::ResourceID)": "worker",
+    "Symbol(alchemy::ResourceFQN)": "hello-world-do-template/dev/worker",
+    "Symbol(alchemy::ResourceKind)": "cloudflare::Worker",
+    "Symbol(alchemy::ResourceScope)": {
+      "@scope": null
+    },
+    "Symbol(alchemy::ResourceSeq)": 0,
+    "Symbol(alchemy::DestroyStrategy)": "sequential"
+  },
+  "props": {
+    "name": "hello-world-do-template",
+    "entrypoint": "src/index.ts",
+    "url": true,
+    "bindings": {
+      "MY_DURABLE_OBJECT": {
+        "type": "durable_object_namespace",
+        "id": "MyDurableObject",
+        "className": "MyDurableObject",
+        "sqlite": true
+      }
+    },
+    "compatibilityDate": "2025-04-01"
+  },
+  "oldProps": {}
+}

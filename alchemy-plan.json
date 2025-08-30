@@ -1,0 +1,56 @@
+{
+  "version": "0.64.0",
+  "imports": [
+    {
+      "module": "alchemy",
+      "items": ["default"]
+    },
+    {
+      "module": "alchemy/cloudflare", 
+      "items": ["DurableObjectNamespace", "Worker"]
+    }
+  ],
+  "patterns": {
+    "app": {
+      "code_snippet": "import alchemy from 'alchemy';\n\nconst app = await alchemy('hello-world-do-template');",
+      "required_fields": ["name"],
+      "optional_fields": []
+    },
+    "worker": {
+      "code_snippet": "export const worker = await Worker('worker', {\n  name: 'hello-world-do-template',\n  entrypoint: 'src/index.ts',\n  url: true,\n  bindings: {\n    MY_DURABLE_OBJECT: durableObject\n  }\n});",
+      "required_fields": ["name", "entrypoint"],
+      "optional_fields": ["url", "bindings", "compatibilityDate"]
+    },
+    "durable_objects": {
+      "code_snippet": "export const durableObject = await DurableObjectNamespace('MyDurableObject', {\n  className: 'MyDurableObject',\n  sqlite: true\n});",
+      "required_fields": ["className"],
+      "optional_fields": ["sqlite"]
+    },
+    "finalize": {
+      "code_snippet": "await app.finalize();",
+      "required_fields": [],
+      "optional_fields": []
+    }
+  },
+  "unsupported": [
+    {
+      "feature": "routes",
+      "reason": "Alchemy uses url: true for workers.dev URLs or domains for custom routes"
+    },
+    {
+      "feature": "crons", 
+      "reason": "Cron scheduling handled separately in Cloudflare dashboard"
+    },
+    {
+      "feature": "migrations.new_sqlite_classes",
+      "reason": "Alchemy handles migrations automatically with sqlite: true flag"
+    }
+  ],
+  "migration_notes": [
+    "Alchemy automatically manages Durable Object migrations using internal tags",
+    "Use sqlite: true flag for Durable Objects with SQLite storage", 
+    "Routes configuration replaced with url: true for workers.dev URLs",
+    "Observability is built into Alchemy and doesn't need explicit configuration",
+    "Upload source maps handled automatically by Alchemy build process"
+  ]
+}
